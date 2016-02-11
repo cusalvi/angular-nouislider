@@ -86,15 +86,32 @@ angular.module('nouislider', []).directive('slider', function() {
                     });
                 }
 
-                slider.on('update', function(event, scope) {
+                slider.on('update', function(event) {
                     var elm = $('#' + event.currentTarget.id);
-                    var background = slider.css("border-color");
-                    $("<div/>").addClass("ui-slider-tick")
-                        .appendTo('#' + event.currentTarget.id)
-                        .css({
-                            left: 40,
-                            background: background
-                        });
+
+                    var counter,
+                        background = slider.css("border-color"),
+                        left = 0,
+                        leftMargin = 0;
+
+                    for (counter = 0; counter < scope.end; counter++) {
+                        if (counter == 0) {
+                            leftMargin = scope.startpointer * 1;
+                            left = leftMargin + "%";
+                            // left = leftMargin;
+                        } else {
+                            leftMargin += scope.increment * 1;
+                            left = leftMargin + "%";
+                            // left = leftMargin;
+                        }
+                        $("<div/>").addClass("ui-slider-tick")
+                            .appendTo(slider)
+                            .css({
+                                left: left,
+                                background: background
+                            });
+                    }
+
                 })
 
 

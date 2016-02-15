@@ -86,34 +86,83 @@ angular.module('nouislider', []).directive('slider', function() {
                     });
                 }
 
+                /* function - thousandSuffix
+                 * It assigns appropriate suffixes to numbers above thousands values.
+                 */
+                scope.thousandSuffix = function(input, decimals) {
+                    // return function(input, decimals) {
+                    var exp, rounded,
+                        suffixes = ['k', 'M', 'B', 'T', 'P', 'E'];
+
+                    if (window.isNaN(input)) {
+                        return null;
+                    }
+
+                    if (input < 1000) {
+                        return input;
+                    }
+
+                    exp = Math.floor(Math.log(input) / Math.log(1000));
+
+                    return (input / Math.pow(1000, exp)).toFixed(decimals) + suffixes[exp - 1];
+                    // };
+
+                };
+
                 slider.on('update', function(event) {
                     var elm = $('#' + event.currentTarget.id);
-
                     var counter,
                         background = slider.css("border-color"),
                         left = 0,
                         leftMargin = 0;
 
-                    for (counter = 0; counter < scope.end; counter++) {
+                    for (counter = 0; counter <= scope.end; counter++) {
                         if (counter == 0) {
                             leftMargin = scope.startpointer * 1;
                             left = leftMargin + "%";
                             // left = leftMargin;
+                        } else if (counter == scope.end) {
+                            leftMargin += scope.increment * 1;
+                            left = leftMargin + "%";
                         } else {
                             leftMargin += scope.increment * 1;
                             left = leftMargin + "%";
                             // left = leftMargin;
+                            $("<div/>").addClass("ui-slider-tick")
+                                .appendTo(slider)
+                                .css({
+                                    left: left,
+                                    background: background
+                                });
+                            console.log(scope.$parent);
+
                         }
-                        $("<div/>").addClass("ui-slider-tick")
-                            .appendTo(slider)
-                            .css({
-                                left: left,
-                                background: background
-                            });
+                        if (scope.end < 5) {
+                            $("<div/>").addClass("ui-slider-value")
+                                .appendTo(slider)
+                                .text(scope.$parent.model.pageSize.values[counter])
+                                .css({
+                                    left: left,
+                                    display: 'block',
+                                    // background: background,
+                                    position: 'absolute',
+                                    top: '100%'
+                                });
+                        } else {
+                            var value = scope.thousandSuffix(scope.$parent.model.pageViews.values[counter], 0);
+                            $("<div/>").addClass("ui-slider-value")
+                                .appendTo(slider)
+                                .text(value)
+                                .css({
+                                    left: left,
+                                    display: 'block',
+                                    // background: background,
+                                    position: 'absolute',
+                                    top: '100%'
+                                });
+                        }
                     }
-
-                })
-
+                });
 
                 return scope.$watch('ngModel', function(newVal, oldVal) {
                     if (newVal !== parsedValue) {

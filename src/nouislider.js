@@ -156,8 +156,8 @@ angular.module('nouislider', []).directive('slider', function() {
                                     left: leftValue,
                                     display: 'block',
                                     position: 'absolute',
-                                    top: '100%';
-                                    margin: '10px auto';
+                                    top: '100%',
+                                    margin: '10px auto'
 
                                 });
                         }

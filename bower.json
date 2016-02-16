@@ -1,6 +1,6 @@
 {
   "name": "angular-nouislider",
-  "homepage": "https://github.com/cusalvi/bootbox.git",
+  "homepage": "https://github.com/cusalvi/angular-nouislider.git",
   "main": "src/nouislider.js",
   "ignore": [
     "app"

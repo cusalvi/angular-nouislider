@@ -92,7 +92,7 @@ angular.module('nouislider', []).directive('slider', function() {
                 scope.thousandSuffix = function(input, decimals) {
                     // return function(input, decimals) {
                     var exp, rounded,
-                        suffixes = ['k', 'M', 'B', 'T', 'P', 'E'];
+                        suffixes = ['K', 'M', 'B', 'T', 'P', 'E'];
 
                     if (window.isNaN(input)) {
                         return null;
@@ -114,39 +114,38 @@ angular.module('nouislider', []).directive('slider', function() {
                     var counter,
                         background = slider.css("border-color"),
                         left = 0,
-                        leftMargin = 0;
+                        leftMargin = 0,
+                        leftValue = 0;
 
                     for (counter = 0; counter <= scope.end; counter++) {
                         if (counter == 0) {
                             leftMargin = scope.startpointer * 1;
                             left = leftMargin + "%";
-                            // left = leftMargin;
                         } else if (counter == scope.end) {
                             leftMargin += scope.increment * 1;
                             left = leftMargin + "%";
+                            leftValue = (leftMargin - 1) + "%";
                         } else {
                             leftMargin += scope.increment * 1;
                             left = leftMargin + "%";
-                            // left = leftMargin;
+                            leftValue = (leftMargin - 2) + "%";
                             $("<div/>").addClass("ui-slider-tick")
                                 .appendTo(slider)
                                 .css({
                                     left: left,
                                     background: background
                                 });
-                            console.log(scope.$parent);
-
                         }
                         if (scope.end < 5) {
                             $("<div/>").addClass("ui-slider-value")
                                 .appendTo(slider)
                                 .text(scope.$parent.model.pageSize.values[counter])
                                 .css({
-                                    left: left,
+                                    left: leftValue,
                                     display: 'block',
-                                    // background: background,
                                     position: 'absolute',
-                                    top: '100%'
+                                    top: '100%',
+                                    margin: '10px auto'
                                 });
                         } else {
                             var value = scope.thousandSuffix(scope.$parent.model.pageViews.values[counter], 0);
@@ -154,11 +153,12 @@ angular.module('nouislider', []).directive('slider', function() {
                                 .appendTo(slider)
                                 .text(value)
                                 .css({
-                                    left: left,
+                                    left: leftValue,
                                     display: 'block',
-                                    // background: background,
                                     position: 'absolute',
-                                    top: '100%'
+                                    top: '100%';
+                                    margin: '10px auto';
+
                                 });
                         }
                     }

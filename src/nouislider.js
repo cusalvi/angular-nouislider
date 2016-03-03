@@ -1,5 +1,5 @@
 'use strict';
-angular.module('nouislider', []).directive('slider', function() {
+angular.module('nouislider', []).directive('slider', function($timeout) {
     return {
         restrict: 'A',
         scope: {
@@ -72,7 +72,18 @@ angular.module('nouislider', []).directive('slider', function() {
                     }
                 });
                 slider.on(callback, function() {
+                    /* Styling for active value under slider */
+                    var currentValue, currentPageSizeValue, filteredPageViewValue;
+                    $(element.find($('.ui-slider-value'))[parsedValue]).css({'color': 'rgb(65, 66, 74)', 'font-weight': 'normal'});
                     parsedValue = parseFloat(slider.val());
+
+                    currentValue = $(element.find($('.ui-slider-value'))[parsedValue]).text();
+                    currentPageSizeValue = scope.$parent.model.pageSize.values[parsedValue];
+                    filteredPageViewValue = scope.thousandSuffix(scope.$parent.model.pageViews.values[parsedValue], 0)
+                    if (currentValue == currentPageSizeValue || currentValue == filteredPageViewValue) {
+                        $(element.find($('.ui-slider-value'))[parsedValue]).css({'color': '#f08041', 'font-weight': '600'});
+                    }
+
                     return scope.$apply(function() {
                         return scope.ngModel = parsedValue;
                     });
@@ -158,7 +169,6 @@ angular.module('nouislider', []).directive('slider', function() {
                                     position: 'absolute',
                                     top: '100%',
                                     margin: '10px auto'
-
                                 });
                         }
                     }
@@ -166,7 +176,10 @@ angular.module('nouislider', []).directive('slider', function() {
 
                 return scope.$watch('ngModel', function(newVal, oldVal) {
                     if (newVal !== parsedValue) {
-                        slider.trigger('update')
+                        slider.trigger('update');
+                        $timeout(function() {
+                            slider.trigger("slide");
+                        }, 1000);
                         return slider.val(newVal);
                     }
 

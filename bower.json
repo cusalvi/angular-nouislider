@@ -19,6 +19,6 @@
     "nouislider": "~6.2.0"
   },
   "author": {
-    "name": "Chetan Salvi"
+    "name": ["Vasyl Stanislavchuk", "Chetan Salvi"]
   }
 }

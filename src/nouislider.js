@@ -74,14 +74,26 @@ angular.module('nouislider', []).directive('slider', function($timeout) {
                 slider.on(callback, function() {
                     /* Styling for active value under slider */
                     var currentValue, currentPageSizeValue, filteredPageViewValue;
-                    $(element.find($('.ui-slider-value'))[parsedValue]).css({'color': 'rgb(65, 66, 74)', 'font-weight': 'normal'});
+                    // $(element.find($('.ui-slider-value'))[parsedValue]).css({ 'color': 'rgb(65, 66, 74)', 'font-weight': 'normal' });
+                    $(element.find($('.ui-slider-value'))[parsedValue]).css({
+                        fontWeight: 'normal',
+                        color: 'rgb(65, 66, 74)'
+                    });
                     parsedValue = parseFloat(slider.val());
+                    // console.log('parsedValue:', parsedValue);
 
                     currentValue = $(element.find($('.ui-slider-value'))[parsedValue]).text();
+                    // console.log('currentValue:', currentValue);
                     currentPageSizeValue = scope.$parent.model.pageSize.values[parsedValue];
-                    filteredPageViewValue = scope.thousandSuffix(scope.$parent.model.pageViews.values[parsedValue], 0)
+                    // console.log('currentPageSizeValue:', currentPageSizeValue);
+                    filteredPageViewValue = scope.thousandSuffix(scope.$parent.model.pageViews.values[parsedValue], 0);
+                    // console.log('filteredPageViewValue:', filteredPageViewValue);
                     if (currentValue == currentPageSizeValue || currentValue == filteredPageViewValue) {
-                        $(element.find($('.ui-slider-value'))[parsedValue]).css({'color': '#f08041', 'font-weight': '600'});
+                        // $(element.find($('.ui-slider-value'))[parsedValue]).css({'color': '#f08041', 'font-weight': '600'});
+                        $(element.find($('.ui-slider-value'))[parsedValue]).css({
+                            fontWeight: '600',
+                            color: 'rgb(240, 128, 65)'
+                        });
                     }
 
                     return scope.$apply(function() {
@@ -176,10 +188,12 @@ angular.module('nouislider', []).directive('slider', function($timeout) {
 
                 return scope.$watch('ngModel', function(newVal, oldVal) {
                     if (newVal !== parsedValue) {
-                        slider.trigger('update');
+                        if (parsedValue === null) {
+                            slider.trigger('update');
+                        }
                         $timeout(function() {
                             slider.trigger("slide");
-                        }, 1000);
+                        }, 500);
                         return slider.val(newVal);
                     }
 
